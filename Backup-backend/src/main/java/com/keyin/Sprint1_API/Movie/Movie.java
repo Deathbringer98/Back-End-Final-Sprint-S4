@@ -1,48 +1,35 @@
 package com.keyin.Sprint1_API.Movie;
 
-import jakarta.persistence.*;
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "movies")
+@Table(name = "movie_db")
 public class Movie {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long movie_id;
 
-    @Column(name = "title", length = 500)
     private String title;
-
-    @Column(name = "genre", length = 500)
+    private int release_year;
     private String genre;
-
-    @Column(name = "director", length = 500)
     private String director;
-
-    @Column(name = "actor", length = 500)
-    private String actor;
-
-    @Column(name = "release_year")
-    private int releaseYear;
-
-    // Constructors
-    public Movie() {}
-
-    public Movie(String title, String genre, String director, String actor, int releaseYear) {
-        this.title = title;
-        this.genre = genre;
-        this.director = director;
-        this.actor = actor;
-        this.releaseYear = releaseYear;
-    }
+    private String main_actor;
+    private double rating;
+    private int runtime;
 
     // Getters and Setters
-    public int getId() {
-        return id;
+
+    public Long getMovie_id() {
+        return movie_id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setMovie_id(Long movie_id) {
+        this.movie_id = movie_id;
     }
 
     public String getTitle() {
@@ -51,6 +38,14 @@ public class Movie {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public int getRelease_year() {
+        return release_year;
+    }
+
+    public void setRelease_year(int release_year) {
+        this.release_year = release_year;
     }
 
     public String getGenre() {
@@ -69,19 +64,27 @@ public class Movie {
         this.director = director;
     }
 
-    public String getActor() {
-        return actor;
+    public String getMain_actor() {
+        return main_actor;
     }
 
-    public void setActor(String actor) {
-        this.actor = actor;
+    public void setMain_actor(String main_actor) {
+        this.main_actor = main_actor;
     }
 
-    public int getReleaseYear() {
-        return releaseYear;
+    public double getRating() {
+        return rating;
     }
 
-    public void setReleaseYear(int releaseYear) {
-        this.releaseYear = releaseYear;
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
+    public int getRuntime() {
+        return runtime;
+    }
+
+    public void setRuntime(int runtime) {
+        this.runtime = runtime;
     }
 }
