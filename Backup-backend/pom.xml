@@ -38,11 +38,11 @@
 			<version>${spring-boot.version}</version>
 		</dependency>
 
-		<!-- MariaDB Connector for connecting to MariaDB database -->
+		<!-- PostgreSQL Connector for connecting to PostgreSQL database -->
 		<dependency>
-			<groupId>org.mariadb.jdbc</groupId>
-			<artifactId>mariadb-java-client</artifactId>
-			<version>3.1.4</version> <!-- You can change this to the latest version available -->
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.6.0</version>
 			<scope>runtime</scope>
 		</dependency>
 
