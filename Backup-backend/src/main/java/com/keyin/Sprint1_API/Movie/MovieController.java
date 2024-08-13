@@ -1,12 +1,14 @@
 package com.keyin.Sprint1_API.Movie;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/movies")
 public class MovieController {
@@ -30,8 +32,9 @@ public class MovieController {
     }
 
     @PostMapping
-    public Movie createMovie(@RequestBody Movie movie) {
-        return movieService.addMovie(movie);
+    public ResponseEntity<Movie> createMovie(@RequestBody Movie movie) {
+        Movie savedMovie = movieService.addMovie(movie);
+        return new ResponseEntity<>(savedMovie, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
@@ -43,6 +46,12 @@ public class MovieController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMovie(@PathVariable(value = "id") Long movie_id) {
         movieService.deleteMovie(movie_id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Movie>> searchMovies(@RequestParam("query") String query) {
+        List<Movie> movies = movieService.searchMovies(query);
+        return ResponseEntity.ok(movies);
     }
 }

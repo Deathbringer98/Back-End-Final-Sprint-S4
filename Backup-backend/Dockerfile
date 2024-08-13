@@ -1,5 +1,5 @@
 # Use an official OpenJDK runtime, matching the Java version used in the project
-FROM openjdk:22-jdk-slim
+FROM openjdk:21-jdk-slim
 
 # Set the working directory in the container
 WORKDIR /app
