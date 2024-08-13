@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -39,34 +40,36 @@ public class MovieApiTests {
     }
 
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     public void testCreateMovie() throws Exception {
         String jsonContent = "{ \"title\": \"Test Movie\", \"genre\": \"Test Genre\", \"rating\": 8.5, \"runtime\": 120 }";
 
-        mockMvc.perform(post("/movies")
+        mockMvc.perform(post("/api/movies")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonContent))
-                .andExpect(status().isCreated())
-                // Comment out the jsonPath assertions until you verify the response structure.
-                //.andExpect(jsonPath("$.title").value("Test Movie"))
-                //.andExpect(jsonPath("$.genre").value("Test Genre"))
-                //.andExpect(jsonPath("$.rating").value(8.5))
-                //.andExpect(jsonPath("$.runtime").value(120));
+                .andExpect(status().isCreated())  // Expecting 201 Created
+                .andExpect(jsonPath("$.title").value("Test Movie"))
+                .andExpect(jsonPath("$.genre").value("Test Genre"))
+                .andExpect(jsonPath("$.rating").value(8.5))
+                .andExpect(jsonPath("$.runtime").value(120))
                 .andDo(print());
     }
 
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     public void testReadMovie() throws Exception {
         // First, save a movie to the database
         Movie savedMovie = movieRepository.save(testMovie);
 
         // Then, try to retrieve it
-        mockMvc.perform(get("/movies/{id}", savedMovie.getMovie_id()))
+        mockMvc.perform(get("/api/movies/{id}", savedMovie.getMovie_id()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value(savedMovie.getTitle()))
                 .andExpect(jsonPath("$.genre").value(savedMovie.getGenre()));
     }
 
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     public void testUpdateMovie() throws Exception {
         // First, save a movie to the database
         Movie savedMovie = movieRepository.save(testMovie);
@@ -74,27 +77,27 @@ public class MovieApiTests {
         // Update the movie details
         String jsonContent = "{ \"title\": \"Updated Movie\", \"genre\": \"Updated Genre\", \"rating\": 9.0, \"runtime\": 130 }";
 
-        mockMvc.perform(put("/movies/{id}", savedMovie.getMovie_id())
+        mockMvc.perform(put("/api/movies/{id}", savedMovie.getMovie_id())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonContent))
-                .andExpect(status().isNoContent()) // Change this to .isOk() if you want to return 200 OK
+                .andExpect(status().isOk())  // Expecting 200 OK
+                .andExpect(jsonPath("$.title").value("Updated Movie"))
+                .andExpect(jsonPath("$.genre").value("Updated Genre"))
                 .andDo(print());
-        // Comment out the jsonPath assertions until you verify the response structure.
-        //.andExpect(jsonPath("$.title").value("Updated Movie"))
-        //.andExpect(jsonPath("$.genre").value("Updated Genre"));
     }
 
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     public void testDeleteMovie() throws Exception {
         // First, save a movie to the database
         Movie savedMovie = movieRepository.save(testMovie);
 
         // Then, delete the movie
-        mockMvc.perform(delete("/movies/{id}", savedMovie.getMovie_id()))
-                .andExpect(status().isNoContent());
+        mockMvc.perform(delete("/api/movies/{id}", savedMovie.getMovie_id()))
+                .andExpect(status().isNoContent());  // Expecting 204 No Content
 
         // Verify the movie is deleted
-        MvcResult result = mockMvc.perform(get("/movies/{id}", savedMovie.getMovie_id()))
+        MvcResult result = mockMvc.perform(get("/api/movies/{id}", savedMovie.getMovie_id()))
                 .andExpect(status().isNotFound())
                 .andReturn();
 
